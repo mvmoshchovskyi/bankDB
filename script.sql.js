@@ -50,43 +50,47 @@
 //
 // # 10. Знайти кредити, які мають найбільшу суму для кожного клієнта окремо.
 //
-// select firstName,  lastName, sum from client join application a on client.idClient = a.Client_idClient
-// order by sum desc;
+// select max(sum) max, FirstName, lastName from client join application a on client.idClient = a.Client_idClient
+// group by lastName
+// order by max desc;
 //
 // # 11. Визначити кількість заявок на крдеит для кожного клієнта.
 //
-// select firstName,  lastName , idApplication from client join application a on client.idClient = a.Client_idClient;
+// select count(sum) countApplication,firstName,  lastName , idApplication from client join application a on client.idClient = a.Client_idClient
+// group by LastName
+// order by countApplication desc ;
 //
 // # 12. Визначити найбільший та найменший кредити.
 //
-// select MAX(sum) AS 'Maximum Credit' , MIN(sum) AS 'Minimum Credit' from application;
+// select MAX(sum) AS 'Maximum Credit' , MIN(sum) AS 'Minimum Credit'  from application ;
 //
 // # 13. Порахувати кількість кредитів для клієнтів,які мають вищу освіту.
 //
-// select sum(sum) as 'credits' from client join application a on client.idClient = a.Client_idClient
+// select count(sum) as ' count credits' from client join application a on client.idClient = a.Client_idClient
 // where Education = 'high';
 //
 // # 14. Вивести дані про клієнта, в якого середня сума кредитів найвища.
 //
 // select Client_idClient,FirstName,LastName, avg(SUM) as maxAvgSum from client join application a on client.idClient = a.Client_idClient
-// group by Client_idClient desc
+// group by Client_idClient
+// order by maxAvgSum desc
 // limit 1 ;
 //
 // # 15. Вивести відділення, яке видало в кредити найбільше грошей
 //
-// SELECT sum(sum) moreMoney,DepartmentCity
-// FROM client c
-// JOIN application a on c.idClient = a.Client_idClient
-// JOIN department d on c.Department_idDepartment = d.idDepartment
+// SELECT sum(sum) moreMoney,DepartmentCity FROM client c
+//     JOIN application a on c.idClient = a.Client_idClient
+//     JOIN department d on c.Department_idDepartment = d.idDepartment
 // group by DepartmentCity
+// order by moreMoney desc
 // limit 1;
+//
 //
 // # 16. Вивести відділення, яке видало найбільший кредит.
 //
-// SELECT DepartmentCity,sum
-// FROM client c
-// JOIN application a on c.idClient = a.Client_idClient
-// JOIN department d on c.Department_idDepartment = d.idDepartment
+// SELECT DepartmentCity,sum FROM client c
+//   JOIN application a on c.idClient = a.Client_idClient
+//   JOIN department d on c.Department_idDepartment = d.idDepartment
 // ORDER BY sum desc
 // limit 1;
 //
