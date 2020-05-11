@@ -1,13 +1,11 @@
 // # 1. +Вибрати усіх клієнтів, чиє ім'я має менше ніж 6 символів.
-//
 // use bank;
 // select * from client
-// where LENGTH(firstName) < 6;
+// where LENGTH(FirstName) < 6;
 //
 // # 2. +Вибрати львівські відділення банку.+
 //
-// select *from client
-// where city = 'lviv';
+// select *from department where DepartmentCity = 'lviv';
 //
 // # 3. +Вибрати клієнтів з вищою освітою та посортувати по прізвищу.
 //
@@ -21,10 +19,10 @@
 // ORDER BY idApplication DESC
 // LIMIT 5;
 //
-// # 5. +Вивести усіх клієнтів, чиє прізвище закінчується на OV чи OVA.
+// # 5. +Вивести усіх клієнтів, чиє прізвище закінчується на iV чи iVA.
 //
 // select *from client
-// where lastName like '%ov' or lastName like '%ova';
+// where lastName like '%iv' or lastName like '%iva';
 //
 // # 6. +Вивести клієнтів банку, які обслуговуються київськими відділеннями.
 //
@@ -35,7 +33,7 @@
 // #  ?????????????? такого поля як телефон немає в таблиці .
 //
 // select FirstName , LastName , city  from client
-// order by LastName;
+// order by FirstName ;
 //
 // # 8. +Вивести дані про клієнтів, які мають кредит більше ніж на 5000 тисяч гривень.
 //
@@ -50,9 +48,9 @@
 //
 // # 10. Знайти кредити, які мають найбільшу суму для кожного клієнта окремо.
 //
-// select max(sum) max, FirstName, lastName from client join application a on client.idClient = a.Client_idClient
-// group by lastName
-// order by max desc;
+// select max(sum) max, FirstName, LastName from client join application a on client.idClient = a.Client_idClient
+// group by idClient;
+//
 //
 // # 11. Визначити кількість заявок на крдеит для кожного клієнта.
 //
@@ -62,12 +60,15 @@
 //
 // # 12. Визначити найбільший та найменший кредити.
 //
-// select MAX(sum) AS 'Maximum Credit' , MIN(sum) AS 'Minimum Credit'  from application ;
+// select MAX(sum) AS 'Maximum Credit'from application
+// union
+// select MIN(sum) AS 'Minimum Credit'  from application ;
 //
 // # 13. Порахувати кількість кредитів для клієнтів,які мають вищу освіту.
 //
-// select count(sum) as ' count credits' from client join application a on client.idClient = a.Client_idClient
-// where Education = 'high';
+// select count(idApplication) as ' count credits' from client join application a on client.idClient = a.Client_idClient
+// where Education = 'high'
+// group by idClient;
 //
 // # 14. Вивести дані про клієнта, в якого середня сума кредитів найвища.
 //
@@ -95,6 +96,10 @@
 // limit 1;
 //
 // # 17. Усім клієнтам, які мають вищу освіту, встановити усі їхні кредити у розмірі 6000 грн.
+// update client,application
+// set sum = 6000
+// where idClient = Client_idClient
+// and Education = 'hight';
 //
 // UPDATE application SET sum = 6000
 // WHERE Client_idClient IN (SELECT idClient FROM client WHERE Education = 'high');
@@ -162,13 +167,16 @@
 //
 // # /*Знайти клієнтів, які є з того самого міста, що і клієнт, який взяв найбільшу кількість кредитів*/
 //
-// select count(sum) countCredit , city,LastName from client c
-//     join application a on c.idClient = a.Client_idClient
-// group by LastName
-// order by countCredit desc
-// limit 1;
-// select *from client c join application a on c.idClient = a.Client_idClient
-// where city like 'Krasne';
+// select *from client,application
+// where Client_idClient=application.Client_idClient
+// and client.City like (
+//     select  city from client,application
+//     where client.idClient = application.Client_idClient
+//     group by idClient
+//     order by count(application.idApplication) desc
+//     limit 1)
+// group by idClient;
+//
 //
 // # #місто чувака який набрав найбільше кредитів
 //
